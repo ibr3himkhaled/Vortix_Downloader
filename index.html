@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" class="dark scroll-smooth">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vortex - The Ultimate Media Engine</title>
+    <title>Vortix Downloader | The Ultimate Media Engine</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -19,33 +19,27 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
-                        mono: ['Space Grotesk', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
                     },
                     colors: {
-                        vortex: {
+                        vortix: {
                             primary: '#7c3aed',
-                            accent: '#22d3ee',
-                            dark: '#09090b',
-                            surface: '#18181b',
-                            glow: '#a855f7'
+                            cyan: '#22d3ee',
+                            surface: '#050505',
+                            card: '#0a0a0a',
                         }
                     },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'spin-slow': 'spin 20s linear infinite',
-                        'gradient': 'gradient 8s ease infinite',
+                    borderRadius: {
+                        '4xl': '2rem',
+                        '5xl': '3rem',
+                        '6xl': '4rem',
+                        'full': '9999px',
                     },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        },
-                        gradient: {
-                            '0%, 100%': { backgroundPosition: '0% 50%' },
-                            '50%': { backgroundPosition: '100% 50%' },
-                        }
+                    boxShadow: {
+                        'glow-purple': '0 0 60px -15px rgba(124, 58, 237, 0.5)',
+                        'glow-cyan': '0 0 60px -15px rgba(34, 211, 238, 0.5)',
+                        'glass': 'inset 0 1px 1px rgba(255, 255, 255, 0.1)',
                     }
                 }
             }
@@ -53,17 +47,25 @@
     </script>
 
     <style>
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: #333 #09090b;
-        }
-        
-        body {
-            background-color: #09090b;
-            overflow-x: hidden;
+        :root {
+            --primary: #7c3aed;
+            --cyan: #22d3ee;
         }
 
-        .mesh-gradient {
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: rgba(34, 211, 238, 0.2);
+            color: #fff;
+        }
+
+        /* Ambient Mesh Background */
+        .ambient-bg {
             position: fixed;
             top: 0;
             left: 0;
@@ -71,347 +73,195 @@
             height: 100vh;
             z-index: -1;
             background: 
-                radial-gradient(ellipse at 20% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(34, 211, 238, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 40% 60%, rgba(168, 85, 247, 0.08) 0%, transparent 40%),
-                radial-gradient(ellipse at 60% 20%, rgba(124, 58, 237, 0.1) 0%, transparent 40%);
-            animation: mesh-move 20s ease-in-out infinite;
-        }
-
-        @keyframes mesh-move {
-            0%, 100% { transform: scale(1) translate(0, 0); }
-            25% { transform: scale(1.05) translate(-2%, 2%); }
-            50% { transform: scale(1) translate(2%, -2%); }
-            75% { transform: scale(1.05) translate(-1%, -1%); }
-        }
-
-        .glow-orb {
-            position: absolute;
-            border-radius: 50%;
+                radial-gradient(circle at 15% 50%, rgba(124, 58, 237, 0.08), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(34, 211, 238, 0.08), transparent 50%);
             filter: blur(80px);
-            opacity: 0.5;
-            animation: orb-float 10s ease-in-out infinite;
         }
 
-        @keyframes orb-float {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-30px) scale(1.1); }
-        }
-
+        /* Ultra-Premium Glass Cards */
         .glass-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255,255,255,0.05);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .glass-nav {
-            background: rgba(9, 9, 11, 0.7);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .text-gradient-main {
-            background: linear-gradient(135deg, #fff 0%, #22d3ee 50%, #a855f7 100%);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradient 4s ease infinite;
-        }
-
-        .btn-glow {
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
         }
 
-        .btn-glow::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn-glow:hover::before {
-            left: 100%;
-        }
-
-        .feature-card {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .feature-card::before {
-            content: '';
+        /* Interactive Glow Effect on Cards */
+        .glass-card::before {
+            content: "";
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
+            border-radius: inherit;
+            padding: 2px;
+            background: linear-gradient(45deg, transparent, rgba(124, 58, 237, 0.3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.5s ease;
         }
-
-        .feature-card:hover::before {
+        .glass-card:hover::before {
             opacity: 1;
         }
 
-        .feature-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(34, 211, 238, 0.3);
-            box-shadow: 0 20px 40px -20px rgba(124, 58, 237, 0.4);
+        /* Animated Text Gradient */
+        .text-gradient {
+            background: linear-gradient(to right, #fff 20%, #a855f7 40%, #22d3ee 60%, #fff 80%);
+            background-size: 200% auto;
+            color: #000;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 8s linear infinite;
         }
 
-        .app-mockup {
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* Magnetic Button Container */
+        .magnetic-wrap {
+            display: inline-block;
+        }
+
+        .btn-glow {
             position: relative;
-            perspective: 1000px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        .app-mockup::before {
+        
+        .btn-glow::after {
             content: '';
             position: absolute;
             inset: -2px;
-            background: linear-gradient(135deg, #7c3aed, #22d3ee, #a855f7);
-            border-radius: 24px;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--primary), var(--cyan));
             z-index: -1;
-            opacity: 0.5;
-            filter: blur(20px);
-            animation: border-glow 3s ease-in-out infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            filter: blur(10px);
         }
 
-        @keyframes border-glow {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
+        .btn-glow:hover::after {
+            opacity: 0.7;
         }
 
-        .noise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        /* Staggered text reveal utility */
+        .reveal-text {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
         }
-
-        .floating-shapes {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .shape {
-            position: absolute;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 50%;
-            animation: shape-float 15s infinite;
-        }
-
-        @keyframes shape-float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-50px) rotate(180deg); }
+        .reveal-text span {
+            display: inline-block;
+            transform: translateY(100%);
         }
     </style>
 </head>
-<body class="text-white selection:bg-vortex-accent selection:text-black">
+<body class="selection:bg-vortix-cyan/30">
 
-    <div class="mesh-gradient"></div>
-    <div class="noise-overlay"></div>
+    <div class="ambient-bg"></div>
 
-    <!-- Floating Shapes Background -->
-    <div class="floating-shapes">
-        <div class="shape w-32 h-32 top-20 left-10" style="animation-delay: 0s;"></div>
-        <div class="shape w-20 h-20 top-40 right-20" style="animation-delay: 2s;"></div>
-        <div class="shape w-40 h-40 bottom-40 left-1/4" style="animation-delay: 4s;"></div>
-        <div class="shape w-16 h-16 bottom-20 right-1/3" style="animation-delay: 6s;"></div>
-    </div>
-
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 top-0 glass-nav transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between">
-            
+    <nav class="fixed w-full z-50 top-6 px-6 transition-transform duration-500" id="navbar">
+        <div class="max-w-5xl mx-auto glass-card rounded-full px-6 py-4 flex items-center justify-between shadow-2xl">
             <a href="#" class="flex items-center gap-3 group">
-                <div class="relative w-10 h-10 flex items-center justify-center">
-                    <div class="absolute inset-0 bg-vortex-primary/30 blur-xl rounded-full group-hover:bg-vortex-accent/40 transition-all duration-500"></div>
-                    <div class="relative z-10 w-10 h-10 bg-gradient-to-br from-vortex-primary to-vortex-accent rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
-                        <i class="fa-solid fa-bolt text-white text-lg"></i>
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-vortix-primary to-vortix-cyan flex items-center justify-center p-[1px] shadow-glow-purple">
+                    <div class="w-full h-full bg-black rounded-full flex items-center justify-center group-hover:bg-transparent transition-all duration-500">
+                        <i class="fa-solid fa-bolt text-white text-sm group-hover:scale-110 transition-transform"></i>
                     </div>
                 </div>
-                <span class="text-2xl font-bold tracking-tight">Vortex</span>
+                <span class="font-display font-semibold tracking-wide text-lg text-white/90">Vortix Downloader</span>
             </a>
 
-            <div class="flex items-center gap-6">
-                <a href="#features" class="hidden md:flex text-sm text-gray-400 hover:text-white transition-colors relative group">
-                    Features
-                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-vortex-accent transition-all group-hover:w-full"></span>
-                </a>
-                <a href="#download" class="btn-glow px-6 py-2.5 bg-gradient-to-r from-vortex-primary to-purple-600 text-white font-bold rounded-full hover:shadow-lg hover:shadow-vortex-primary/40 transition-all flex items-center gap-2">
-                    <span>Download</span>
-                    <i class="fa-solid fa-arrow-down text-sm"></i>
-                </a>
+            <div class="flex items-center gap-4">
+                <a href="#features" class="hidden md:block px-4 py-2 text-sm font-medium text-white/50 hover:text-white transition-colors">Features</a>
+                <div class="magnetic-wrap">
+                    <a href="#download" class="btn-glow px-6 py-2.5 bg-white text-black text-sm font-semibold rounded-full hover:scale-105 transition-transform flex items-center gap-2">
+                        <span>Get App</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center justify-center pt-24 pb-12 overflow-hidden">
-        
-        <div class="container mx-auto px-6 relative z-10">
+    <section class="relative min-h-screen flex flex-col items-center justify-center pt-32 px-6 overflow-hidden">
+        <div class="text-center max-w-5xl mx-auto z-10 w-full flex flex-col items-center">
             
-            <!-- Badge -->
-            <div data-aos="fade-down" class="flex justify-center mb-10">
-                <div class="inline-flex items-center gap-3 px-5 py-2.5 glass-card rounded-full text-sm font-medium">
-                    <span class="w-2 h-2 rounded-full bg-vortex-accent animate-pulse"></span>
-                    <span class="text-gray-300">Version 2.0 Released</span>
-                    <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                    <span class="text-vortex-accent">Stable</span>
-                </div>
+            <div class="hero-elem inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl mb-10 text-xs font-medium text-white/70 shadow-glass">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-vortix-cyan opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-vortix-cyan"></span>
+                </span>
+                Vortix Downloader is now available
             </div>
 
-            <!-- Main Heading -->
-            <div class="text-center mb-16">
-                <h1 data-aos="fade-up" data-aos-duration="1000" class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 leading-tight">
-                    Media Control<br>
-                    <span class="text-gradient-main">Reimagined</span>
-                </h1>
+            <h1 class="font-display text-5xl md:text-7xl lg:text-[6.5rem] font-bold tracking-tighter mb-8 leading-[1.1] reveal-text" id="main-title">
+                <span>Download</span> <span>anything.</span><br>
+                <span class="text-gradient">Compromise nothing.</span>
+            </h1>
 
-                <p data-aos="fade-up" data-aos-delay="150" class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed">
-                    The most powerful open-source downloader built with 
-                    <span class="text-white font-medium">yt-dlp</span> & <span class="text-white font-medium">FFmpeg</span>. 
-                    Experience blazing-fast <span class="text-vortex-accent">8K downloads</span>, smart organization, and next-level performance.
-                </p>
+            <p class="hero-elem text-lg md:text-2xl text-white/40 max-w-2xl mx-auto mb-14 font-light leading-relaxed">
+                The most advanced media extraction engine ever built. Powered by yt-dlp, housed in a breathtaking interface.
+            </p>
 
-                <div data-aos="zoom-in" data-aos-delay="300" class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <a href="#download" class="btn-glow px-8 py-4 bg-gradient-to-r from-vortex-primary to-purple-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-vortex-primary/50 transition-all flex items-center gap-3 text-lg">
-                        <i class="fa-brands fa-windows"></i>
-                        Get Started Free
+            <div class="hero-elem flex flex-col sm:flex-row items-center justify-center gap-6 w-full max-w-xl">
+                <div class="magnetic-wrap w-full sm:w-1/2">
+                    <a href="https://github.com/ibr3himkhaled/Vortix_Downloader/releases" target="_blank" class="btn-glow w-full flex items-center justify-center gap-3 px-8 py-4.5 bg-white text-black rounded-[2rem] font-semibold text-lg hover:scale-[1.02] transition-transform">
+                        <i class="fa-brands fa-windows text-xl"></i>
+                        Windows
                     </a>
-                    <a href="#features" class="px-8 py-4 glass-card rounded-xl font-medium hover:bg-white/10 transition-all flex items-center gap-3 text-lg">
-                        <i class="fa-solid fa-play text-vortex-accent"></i>
-                        See Features
+                </div>
+                <div class="magnetic-wrap w-full sm:w-1/2">
+                    <a href="https://apkpure.com/vortix/com.download.vortix" target="_blank" class="w-full flex items-center justify-center gap-3 px-8 py-4.5 glass-card rounded-[2rem] font-semibold text-lg text-white hover:bg-white/10 transition-colors">
+                        <i class="fa-brands fa-android text-xl text-vortix-cyan"></i>
+                        Android APK
                     </a>
                 </div>
             </div>
+        </div>
 
-            <!-- App Mockup -->
-            <div data-aos="fade-up" data-aos-delay="400" class="app-mockup max-w-5xl mx-auto">
-                <div class="glass-card rounded-2xl overflow-hidden shadow-2xl bg-vortex-surface">
-                    <!-- Window Header -->
-                    <div class="h-12 bg-[#18181b] border-b border-white/5 flex items-center px-4 justify-between">
-                        <div class="flex gap-2">
-                            <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
-                            <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                            <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
-                        </div>
-                        <div class="text-xs text-gray-500 font-mono">Vortex v2.0</div>
-                        <div class="w-14"></div>
+        <div class="mt-24 w-full max-w-5xl relative z-20 perspective-1000" id="app-mockup">
+            <div class="w-full aspect-[16/9] bg-[#030303]/90 backdrop-blur-3xl rounded-[2.5rem] border border-white/10 shadow-2xl overflow-hidden flex flex-col relative transform-gpu">
+                
+                <div class="absolute inset-0 bg-gradient-to-br from-vortix-primary/10 to-vortix-cyan/5 pointer-events-none"></div>
+
+                <div class="h-14 border-b border-white/5 flex items-center px-6 justify-between bg-white/[0.02]">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+                        <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+                        <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
                     </div>
-                    
-                    <!-- App Content -->
-                    <div class="flex min-h-[400px] md:min-h-[500px]">
-                        <!-- Sidebar -->
-                        <div class="w-20 md:w-64 bg-[#121212] border-r border-white/5 p-4 flex flex-col">
-                            <div class="flex items-center gap-3 mb-10 px-2">
-                                <div class="w-8 h-8 bg-gradient-to-br from-vortex-primary to-vortex-accent rounded-lg flex items-center justify-center">
-                                    <i class="fa-solid fa-bolt text-white text-sm"></i>
-                                </div>
-                                <span class="hidden md:block font-bold text-xl">Vortex</span>
-                            </div>
-                            <div class="space-y-2 w-full">
-                                <div class="p-3 bg-gradient-to-r from-vortex-primary/20 to-transparent text-vortex-accent rounded-xl flex items-center gap-4 border-l-2 border-vortex-accent">
-                                    <i class="fa-solid fa-home"></i> <span class="hidden md:block">Home</span>
-                                </div>
-                                <div class="p-3 text-gray-500 hover:text-white hover:bg-white/5 rounded-xl flex items-center gap-4 transition-all">
-                                    <i class="fa-solid fa-download"></i> <span class="hidden md:block">Downloads</span>
-                                </div>
-                                <div class="p-3 text-gray-500 hover:text-white hover:bg-white/5 rounded-xl flex items-center gap-4 transition-all">
-                                    <i class="fa-solid fa-gear"></i> <span class="hidden md:block">Settings</span>
-                                </div>
-                                <div class="p-3 text-gray-500 hover:text-white hover:bg-white/5 rounded-xl flex items-center gap-4 transition-all">
-                                    <i class="fa-solid fa-clock-rotate-left"></i> <span class="hidden md:block">History</span>
-                                </div>
-                            </div>
-                            <div class="mt-auto pt-4 border-t border-white/5">
-                                <p class="text-[10px] text-gray-600 hidden md:block">Developed by</p>
-                                <p class="text-xs font-medium text-gray-500 hidden md:block">Ibrahim Khaled</p>
-                            </div>
+                    <div class="text-xs font-mono text-white/30">vortix_engine.exe</div>
+                    <div class="w-12"></div>
+                </div>
+                
+                <div class="flex-1 p-10 flex flex-col items-center justify-center relative">
+                    <div class="w-full max-w-2xl h-16 rounded-full bg-black/50 border border-white/10 flex items-center px-6 shadow-glass relative group cursor-text">
+                        <div class="absolute inset-0 rounded-full bg-gradient-to-r from-vortix-primary/20 to-vortix-cyan/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-md -z-10"></div>
+                        <i class="fa-solid fa-link text-white/30 mr-4"></i>
+                        <div class="flex-1 text-white/60 text-sm font-mono tracking-wide">https://youtube.com/watch?v=...</div>
+                        <div class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform cursor-pointer">
+                            <i class="fa-solid fa-arrow-right text-sm"></i>
                         </div>
-                        
-                        <!-- Main Content -->
-                        <div class="flex-1 p-8 bg-vortex-dark relative overflow-hidden">
-                            <!-- Decorative elements -->
-                            <div class="glow-orb w-64 h-64 bg-vortex-primary/20 -top-20 -right-20"></div>
-                            <div class="glow-orb w-48 h-48 bg-vortex-accent/10 bottom-0 left-0" style="animation-delay: 5s;"></div>
-                            
-                            <div class="relative z-10">
-                                <!-- URL Input -->
-                                <div class="w-full mb-8">
-                                    <div class="h-14 bg-[#18181b] rounded-xl flex items-center px-5 text-gray-400 border border-white/5 focus-within:border-vortex-primary/50 focus-within:shadow-lg focus-within:shadow-vortex-primary/10 transition-all">
-                                        <i class="fa-solid fa-link mr-4 text-vortex-accent"></i>
-                                        <input type="text" placeholder="Paste your video URL here..." class="bg-transparent w-full outline-none text-white placeholder-gray-600">
-                                        <button class="px-4 py-2 bg-vortex-primary rounded-lg text-white font-medium text-sm hover:bg-purple-600 transition-colors">
-                                            Analyze
-                                        </button>
-                                    </div>
-                                </div>
+                    </div>
 
-                                <!-- Preview & Controls -->
-                                <div class="flex gap-6 w-full">
-                                    <div class="w-1/3 aspect-video bg-[#18181b] rounded-xl border border-white/5 flex flex-col items-center justify-center relative overflow-hidden group">
-                                        <div class="absolute inset-0 bg-gradient-to-br from-vortex-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                        <i class="fa-solid fa-play-circle text-5xl text-gray-600 group-hover:text-vortex-accent transition-colors mb-2"></i>
-                                        <span class="text-xs text-gray-600">Preview</span>
-                                    </div>
-                                    <div class="w-2/3 space-y-4">
-                                        <div class="flex gap-3">
-                                            <button class="flex-1 h-12 bg-[#18181b] rounded-xl text-sm font-medium text-gray-300 border border-white/5 hover:border-vortex-primary/50 hover:text-white transition-all flex items-center justify-center gap-2">
-                                                <i class="fa-solid fa-video text-vortex-accent"></i> Video
-                                            </button>
-                                            <button class="flex-1 h-12 bg-[#18181b] rounded-xl text-sm font-medium text-gray-500 border border-white/5 hover:border-vortex-primary/50 hover:text-white transition-all flex items-center justify-center gap-2">
-                                                <i class="fa-solid fa-music text-purple-400"></i> Audio
-                                            </button>
-                                        </div>
-                                        <button class="w-full h-14 bg-gradient-to-r from-vortex-primary to-purple-600 rounded-xl font-bold flex items-center justify-center gap-3 hover:shadow-lg hover:shadow-vortex-primary/50 transition-all">
-                                            <i class="fa-solid fa-download"></i> Start Download
-                                        </button>
-                                        <!-- Progress Bar -->
-                                        <div class="space-y-2">
-                                            <div class="h-2 bg-[#18181b] rounded-full overflow-hidden">
-                                                <div class="h-full bg-gradient-to-r from-vortex-primary to-vortex-accent w-2/3 rounded-full relative">
-                                                    <div class="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-lg"></div>
-                                                </div>
-                                            </div>
-                                            <div class="flex justify-between text-xs">
-                                                <span class="text-gray-500">Downloading: video.mp4</span>
-                                                <span class="text-vortex-accent font-mono">64%</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                    <div class="mt-16 w-full max-w-xl space-y-6">
+                        <div class="flex items-center gap-5">
+                            <div class="w-12 h-12 rounded-[1.25rem] bg-vortix-primary/10 border border-vortix-primary/20 flex items-center justify-center text-vortix-primary shadow-glow-purple">
+                                <i class="fa-solid fa-video text-lg"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between text-xs font-mono text-white/40 mb-2">
+                                    <span>Downloading Video...</span>
+                                    <span>75%</span>
                                 </div>
-
-                                <!-- Quick Actions -->
-                                <div class="grid grid-cols-3 gap-4 mt-8">
-                                    <div class="p-4 bg-[#18181b]/50 rounded-xl border border-white/5 text-center">
-                                        <i class="fa-solid fa-high-resolution text-vortex-accent text-xl mb-2"></i>
-                                        <p class="text-xs text-gray-500">8K Quality</p>
-                                    </div>
-                                    <div class="p-4 bg-[#18181b]/50 rounded-xl border border-white/5 text-center">
-                                        <i class="fa-solid fa-bolt text-yellow-400 text-xl mb-2"></i>
-                                        <p class="text-xs text-gray-500">Fast Speed</p>
-                                    </div>
-                                    <div class="p-4 bg-[#18181b]/50 rounded-xl border border-white/5 text-center">
-                                        <i class="fa-solid fa-shield-halved text-green-400 text-xl mb-2"></i>
-                                        <p class="text-xs text-gray-500">Safe & Secure</p>
+                                <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="w-3/4 h-full bg-gradient-to-r from-vortix-primary to-vortix-cyan rounded-full relative">
+                                        <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
                                     </div>
                                 </div>
                             </div>
@@ -419,158 +269,190 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="py-28 relative">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <span data-aos="fade-up" class="inline-block px-4 py-1.5 glass-card rounded-full text-vortex-accent text-sm font-medium mb-6">Features</span>
-                <h2 data-aos="fade-up" data-aos-delay="100" class="text-4xl md:text-5xl font-bold mb-6">Everything you need</h2>
-                <p data-aos="fade-up" data-aos-delay="200" class="text-gray-400 max-w-xl mx-auto">Powerful features that make downloading media effortless and enjoyable.</p>
+    <section id="features" class="py-40 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-24 feature-header">
+                <h2 class="font-display text-5xl md:text-6xl font-bold tracking-tight mb-6">Uncompromising Power.</h2>
+                <p class="text-xl text-white/40 max-w-2xl mx-auto font-light">Every tool you need to extract and organize media, packed into a beautiful, lightweight engine.</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                <div data-aos="fade-up" data-aos-delay="100" class="feature-card glass-card p-8 rounded-2xl">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-vortex-primary to-purple-600 flex items-center justify-center mb-6 shadow-lg shadow-vortex-primary/30">
-                        <i class="fa-solid fa-wand-magic-sparkles text-white text-2xl"></i>
+                <div class="glass-card rounded-[2.5rem] p-10 flex flex-col feature-card group">
+                    <div class="w-16 h-16 rounded-[1.5rem] bg-white/5 border border-white/10 flex items-center justify-center mb-8 text-white group-hover:scale-110 group-hover:bg-vortix-primary/20 group-hover:border-vortix-primary/30 transition-all duration-500">
+                        <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Smart Organize</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Automatically creates folders for each channel. Keeps your library pristine and organized without lifting a finger.</p>
+                    <h3 class="text-2xl font-semibold mb-3">Auto-Organization</h3>
+                    <p class="text-white/40 text-sm leading-relaxed">Reads metadata to instantly create clean, structured folders for channels and playlists. Zero manual sorting.</p>
                 </div>
 
-                <div data-aos="fade-up" data-aos-delay="150" class="feature-card glass-card p-8 rounded-2xl">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center mb-6 shadow-lg shadow-red-500/30">
-                        <i class="fa-solid fa-ban text-white text-2xl"></i>
+                <div class="glass-card rounded-[2.5rem] p-10 flex flex-col feature-card group">
+                    <div class="w-16 h-16 rounded-[1.5rem] bg-white/5 border border-white/10 flex items-center justify-center mb-8 text-white group-hover:scale-110 group-hover:bg-vortix-cyan/20 group-hover:border-vortix-cyan/30 transition-all duration-500">
+                        <i class="fa-solid fa-ban text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">SponsorBlock</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Integrated API to skip in-video sponsors, intros, and outros automatically. Save hours of your life.</p>
+                    <h3 class="text-2xl font-semibold mb-3">SponsorBlock Native</h3>
+                    <p class="text-white/40 text-sm leading-relaxed">Built-in API integration detects and completely removes in-video sponsors, intros, and self-promotions.</p>
                 </div>
 
-                <div data-aos="fade-up" data-aos-delay="200" class="feature-card glass-card p-8 rounded-2xl">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-6 shadow-lg shadow-purple-500/30">
-                        <i class="fa-solid fa-music text-white text-2xl"></i>
+                <div class="glass-card rounded-[2.5rem] p-10 flex flex-col feature-card group">
+                    <div class="w-16 h-16 rounded-[1.5rem] bg-white/5 border border-white/10 flex items-center justify-center mb-8 text-white group-hover:scale-110 group-hover:bg-white/10 transition-all duration-500">
+                        <i class="fa-solid fa-compact-disc text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Audio Extraction</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Convert videos to crystal clear MP3, FLAC, or WAV. Supports embedding metadata and album art.</p>
+                    <h3 class="text-2xl font-semibold mb-3">Lossless Audio</h3>
+                    <p class="text-white/40 text-sm leading-relaxed">Extract crystal clear MP3, FLAC, or WAV files. Automatically embeds the correct album art and metadata.</p>
                 </div>
-
-                <div data-aos="fade-up" data-aos-delay="250" class="feature-card glass-card p-8 rounded-2xl">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-500 to-amber-500 flex items-center justify-center mb-6 shadow-lg shadow-yellow-500/30">
-                        <i class="fa-solid fa-list-ol text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Playlist Control</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Download full playlists or select specific items (e.g., 1, 5-10). Total control over bulk downloads.</p>
-                </div>
-
-                <div data-aos="fade-up" data-aos-delay="300" class="feature-card glass-card p-8 rounded-2xl">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center mb-6 shadow-lg shadow-pink-500/30">
-                        <i class="fa-solid fa-scissors text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Time Trimming</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Don't need the whole video? Cut specific parts by timestamp before downloading.</p>
-                </div>
-
-                <div data-aos="fade-up" data-aos-delay="350" class="feature-card glass-card p-8 rounded-2xl">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-6 shadow-lg shadow-blue-500/30">
-                        <i class="fa-solid fa-moon text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Modern Dark UI</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Built with a sleek, eye-friendly dark mode by default. Responsive and beautiful on Windows.</p>
-                </div>
-
             </div>
         </div>
     </section>
 
-    <!-- Download Section -->
-    <section id="download" class="py-28 relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-vortex-primary/5 to-transparent"></div>
-        <div class="glow-orb w-96 h-96 bg-vortex-primary/30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-        
-        <div class="max-w-4xl mx-auto px-6 relative z-10 text-center">
-            <span data-aos="fade-up" class="inline-block px-4 py-1.5 glass-card rounded-full text-vortex-accent text-sm font-medium mb-6">Download</span>
-            <h2 data-aos="fade-up" data-aos-delay="100" class="text-4xl md:text-6xl font-bold mb-8">Ready to get started?</h2>
-            <p data-aos="fade-up" data-aos-delay="200" class="text-xl text-gray-400 mb-12">Download Vortex now and experience the future of media downloading.</p>
+    <section id="download" class="py-32 px-6 relative z-10 mb-20">
+        <div class="max-w-6xl mx-auto glass-card rounded-[3rem] p-16 md:p-24 text-center relative overflow-hidden cta-section">
+            <div class="absolute inset-0 bg-gradient-to-t from-vortix-primary/10 to-transparent opacity-50 pointer-events-none"></div>
             
-            <div data-aos="zoom-in" data-aos-delay="300" class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">
-                <a href="https://github.com/ibr3himkhaled/Vortex/releases" target="_blank" class="btn-glow px-10 py-5 bg-gradient-to-r from-vortex-primary to-purple-600 text-white font-bold rounded-2xl hover:shadow-2xl hover:shadow-vortex-primary/50 transition-all flex items-center gap-4 text-lg">
+            <h2 class="font-display text-5xl md:text-7xl font-bold mb-8 tracking-tight">Ready to upgrade?</h2>
+            <p class="text-xl text-white/50 mb-14 max-w-2xl mx-auto font-light">Free forever. Open-source forever. No tracking, just pure performance.</p>
+            
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
+                <a href="https://github.com/ibr3himkhaled/Vortix_Downloader/releases" target="_blank" class="btn-glow px-10 py-5 bg-white text-black font-semibold rounded-full flex items-center justify-center gap-4 text-lg w-full sm:w-auto hover:scale-105 transition-transform">
                     <i class="fa-brands fa-windows text-2xl"></i>
-                    <div class="text-left">
-                        <div class="text-sm font-medium opacity-80">Download for</div>
-                        <div>Windows</div>
-                    </div>
+                    Download Windows
                 </a>
-                <a href="https://apkpure.com/vortix/com.download.vortix" class="px-10 py-5 bg-[#3ddc84] text-black font-bold rounded-2xl hover:shadow-lg hover:shadow-green-500/30 transition-all flex items-center gap-4 text-lg">
-                    <i class="fa-brands fa-android text-2xl"></i>
-                    <div class="text-left">
-                        <div class="text-sm font-medium opacity-80">Download for</div>
-                        <div>Android</div>
-                    </div>
+                
+                <a href="https://apkpure.com/vortix/com.download.vortix" target="_blank" class="glass-card px-10 py-5 text-white font-semibold rounded-full flex items-center justify-center gap-4 text-lg w-full sm:w-auto hover:bg-white/10 transition-colors">
+                    <i class="fa-brands fa-android text-2xl text-vortix-cyan"></i>
+                    Download Android
                 </a>
             </div>
-
-            <div data-aos="fade-up" data-aos-delay="400" class="mt-12 flex flex-wrap justify-center items-center gap-8 text-sm text-gray-500">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-check-circle text-vortex-accent"></i>
-                    <span>Free & Open Source</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-check-circle text-vortex-accent"></i>
-                    <span>No Ads</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-check-circle text-vortex-accent"></i>
-                    <span>Regular Updates</span>
-                </div>
-            </div>
-
-            <p class="mt-8 text-sm text-gray-600">Requires Windows 10/11 • 64-bit Architecture</p>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="border-t border-white/5 bg-[#09090b] py-12">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-gradient-to-br from-vortex-primary to-vortex-accent rounded-lg flex items-center justify-center">
-                    <i class="fa-solid fa-bolt text-white text-sm"></i>
-                </div>
-                <span class="font-bold text-lg">Vortex</span>
-            </div>
-            <div class="text-gray-500 text-sm text-center md:text-right">
-                <p>Built with <i class="fa-solid fa-heart text-red-500 mx-1"></i> by <span class="text-white">Ibrahim Khaled</span></p>
-                <p class="mt-1">&copy; 2026 Vortex. All rights reserved.</p>
-            </div>
-            <div class="flex items-center gap-4">
-                <a href="https://github.com/ibr3himkhaled/Vortex" class="w-10 h-10 glass-card rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all">
-                    <i class="fa-brands fa-github"></i>
-                </a>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({
-            once: true,
-            duration: 800,
-            easing: 'ease-out-quart'
+        // Smooth Scrolling using Lenis (Standard for modern award-winning sites)
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
         });
 
-        // Navbar scroll effect
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('py-2');
-                navbar.classList.remove('py-4');
-            } else {
-                navbar.classList.add('py-4');
-                navbar.classList.remove('py-2');
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Text Split & Reveal
+        const titleWords = document.querySelectorAll('#main-title span');
+        gsap.to(titleWords, {
+            y: "0%",
+            duration: 1.2,
+            stagger: 0.15,
+            ease: "power4.out",
+            delay: 0.2
+        });
+
+        gsap.from('.hero-elem', {
+            y: 40,
+            opacity: 0,
+            duration: 1.2,
+            stagger: 0.2,
+            ease: "power3.out",
+            delay: 0.6
+        });
+
+        // App Mockup Scroll Animation
+        gsap.fromTo('#app-mockup', 
+            { 
+                y: 150, 
+                opacity: 0, 
+                rotationX: 25, 
+                scale: 0.9 
+            },
+            {
+                y: 0,
+                opacity: 1,
+                rotationX: 0,
+                scale: 1,
+                duration: 1.5,
+                ease: "power3.out",
+                delay: 0.8
             }
+        );
+
+        // Scrub animation for the mockup as you scroll down
+        gsap.to('#app-mockup > div', {
+            scrollTrigger: {
+                trigger: '#app-mockup',
+                start: 'top center',
+                end: 'bottom top',
+                scrub: 1,
+            },
+            y: 100,
+            scale: 0.95,
+            opacity: 0.5
+        });
+
+        // Feature Cards Staggered Reveal
+        gsap.from('.feature-header', {
+            scrollTrigger: { trigger: '#features', start: 'top 75%' },
+            y: 50, opacity: 0, duration: 1, ease: 'power3.out'
+        });
+
+        gsap.from('.feature-card', {
+            scrollTrigger: { trigger: '#features', start: 'top 65%' },
+            y: 50, opacity: 0, duration: 1, stagger: 0.15, ease: 'power3.out'
+        });
+
+        // CTA Reveal
+        gsap.from('.cta-section', {
+            scrollTrigger: { trigger: '.cta-section', start: 'top 80%' },
+            y: 50, opacity: 0, scale: 0.95, duration: 1.2, ease: 'power4.out'
+        });
+
+        // Magnetic Button Logic
+        const magneticElements = document.querySelectorAll('.magnetic-wrap');
+        magneticElements.forEach(elem => {
+            elem.addEventListener('mousemove', (e) => {
+                const rect = elem.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                gsap.to(elem.children[0], {
+                    x: x * 0.3,
+                    y: y * 0.3,
+                    duration: 0.6,
+                    ease: "power3.out"
+                });
+            });
+            
+            elem.addEventListener('mouseleave', () => {
+                gsap.to(elem.children[0], {
+                    x: 0,
+                    y: 0,
+                    duration: 0.6,
+                    ease: "elastic.out(1, 0.3)"
+                });
+            });
+        });
+
+        // Navbar Hide/Show on Scroll
+        let lastScroll = 0;
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                navbar.style.transform = 'translateY(-150%)';
+            } else {
+                navbar.style.transform = 'translateY(0)';
+            }
+            lastScroll = currentScroll;
         });
     </script>
 </body>
