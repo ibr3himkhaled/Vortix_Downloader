@@ -40,6 +40,7 @@
                         'glow-purple': '0 0 60px -15px rgba(124, 58, 237, 0.5)',
                         'glow-cyan': '0 0 60px -15px rgba(34, 211, 238, 0.5)',
                         'glass': 'inset 0 1px 1px rgba(255, 255, 255, 0.1)',
+                        'glass-dark': 'inset 0 1px 1px rgba(0, 0, 0, 0.1)',
                     }
                 }
             }
@@ -53,14 +54,16 @@
         }
 
         body {
-            background-color: #000000;
-            color: #ffffff;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
         ::selection {
-            background: rgba(34, 211, 238, 0.2);
+            background: rgba(34, 211, 238, 0.3);
+            color: #000;
+        }
+        
+        .dark ::selection {
             color: #fff;
         }
 
@@ -73,20 +76,34 @@
             height: 100vh;
             z-index: -1;
             background: 
-                radial-gradient(circle at 15% 50%, rgba(124, 58, 237, 0.08), transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(34, 211, 238, 0.08), transparent 50%);
+                radial-gradient(circle at 15% 50%, rgba(124, 58, 237, 0.05), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(34, 211, 238, 0.05), transparent 50%);
             filter: blur(80px);
+            transition: opacity 0.5s ease;
+        }
+
+        .dark .ambient-bg {
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(124, 58, 237, 0.12), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(34, 211, 238, 0.12), transparent 50%);
         }
 
         /* Ultra-Premium Glass Cards */
         .glass-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
-            border: 1px solid rgba(255,255,255,0.05);
+            background: linear-gradient(145deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.04) 100%);
+            border: 1px solid rgba(0,0,0,0.05);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.5);
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .dark .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
         }
 
         /* Interactive Glow Effect on Cards */
@@ -105,20 +122,29 @@
             mask-composite: exclude;
             opacity: 0;
             transition: opacity 0.5s ease;
+            pointer-events: none;
         }
+        
         .glass-card:hover::before {
             opacity: 1;
         }
 
         /* Animated Text Gradient */
         .text-gradient {
-            background: linear-gradient(to right, #fff 20%, #a855f7 40%, #22d3ee 60%, #fff 80%);
+            background: linear-gradient(to right, #000 20%, #a855f7 40%, #22d3ee 60%, #000 80%);
             background-size: 200% auto;
             color: #000;
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: shine 8s linear infinite;
+        }
+
+        .dark .text-gradient {
+            background: linear-gradient(to right, #fff 20%, #a855f7 40%, #22d3ee 60%, #fff 80%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         @keyframes shine {
@@ -145,6 +171,7 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             filter: blur(10px);
+            pointer-events: none;
         }
 
         .btn-glow:hover::after {
@@ -159,27 +186,40 @@
             display: inline-block;
             transform: translateY(100%);
         }
+
+        /* Social Icon Hover Colors */
+        .hover-fb:hover { color: #1877F2; transform: translateY(-3px); }
+        .hover-ig:hover { color: #E4405F; transform: translateY(-3px); }
+        .hover-li:hover { color: #0A66C2; transform: translateY(-3px); }
+        .hover-tg:hover { color: #229ED9; transform: translateY(-3px); }
+        .hover-gh:hover { color: #7c3aed; transform: translateY(-3px); }
     </style>
 </head>
-<body class="selection:bg-vortix-cyan/30">
+<body class="bg-[#fafafa] text-[#050505] dark:bg-[#000000] dark:text-[#ffffff] transition-colors duration-500">
 
     <div class="ambient-bg"></div>
 
-    <nav class="fixed w-full z-50 top-6 px-6 transition-transform duration-500" id="navbar">
-        <div class="max-w-5xl mx-auto glass-card rounded-full px-6 py-4 flex items-center justify-between shadow-2xl">
-            <a href="#" class="flex items-center gap-3 group">
+    <nav class="fixed w-full z-50 top-0 pt-6 px-6 transition-all duration-300" id="navbar">
+        <div id="nav-container" class="max-w-5xl mx-auto glass-card rounded-full px-6 py-4 flex items-center justify-between shadow-xl dark:shadow-2xl transition-all duration-500">
+            <a href="#" class="flex items-center gap-3 group relative z-10">
                 <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-vortix-primary to-vortix-cyan flex items-center justify-center p-[1px] shadow-glow-purple">
-                    <div class="w-full h-full bg-black rounded-full flex items-center justify-center group-hover:bg-transparent transition-all duration-500">
-                        <i class="fa-solid fa-bolt text-white text-sm group-hover:scale-110 transition-transform"></i>
+                    <div class="w-full h-full bg-white dark:bg-black rounded-full flex items-center justify-center group-hover:bg-transparent transition-all duration-500">
+                        <i class="fa-solid fa-bolt text-black dark:text-white text-sm group-hover:scale-110 group-hover:text-white transition-all"></i>
                     </div>
                 </div>
-                <span class="font-display font-semibold tracking-wide text-lg text-white/90">Vortix Downloader</span>
+                <span class="font-display font-semibold tracking-wide text-lg text-black/90 dark:text-white/90">Vortix Downloader</span>
             </a>
 
-            <div class="flex items-center gap-4">
-                <a href="#features" class="hidden md:block px-4 py-2 text-sm font-medium text-white/50 hover:text-white transition-colors">Features</a>
-                <div class="magnetic-wrap">
-                    <a href="#download" class="btn-glow px-6 py-2.5 bg-white text-black text-sm font-semibold rounded-full hover:scale-105 transition-transform flex items-center gap-2">
+            <div class="flex items-center gap-3 md:gap-6 relative z-10">
+                <a href="#features" class="nav-link hidden md:block px-2 py-2 text-sm font-medium text-black/50 hover:text-vortix-primary dark:text-white/50 dark:hover:text-vortix-primary transition-colors cursor-pointer">Features</a>
+                
+                <button id="theme-toggle" class="w-10 h-10 rounded-full flex items-center justify-center bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition-colors cursor-pointer" aria-label="Toggle Dark Mode">
+                    <i class="fa-solid fa-moon text-black/70 dark:hidden text-lg"></i>
+                    <i class="fa-solid fa-sun text-white/90 hidden dark:block text-lg"></i>
+                </button>
+
+                <div class="magnetic-wrap hidden sm:block">
+                    <a href="#download" class="nav-link btn-glow px-6 py-2.5 bg-black text-white dark:bg-white dark:text-black text-sm font-semibold rounded-full hover:scale-105 transition-transform flex items-center gap-2 cursor-pointer">
                         <span>Get App</span>
                         <i class="fa-solid fa-arrow-right text-xs"></i>
                     </a>
@@ -191,7 +231,7 @@
     <section class="relative min-h-screen flex flex-col items-center justify-center pt-32 px-6 overflow-hidden">
         <div class="text-center max-w-5xl mx-auto z-10 w-full flex flex-col items-center">
             
-            <div class="hero-elem inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl mb-10 text-xs font-medium text-white/70 shadow-glass">
+            <div class="hero-elem inline-flex items-center gap-3 px-4 py-2 rounded-full border border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5 backdrop-blur-xl mb-10 text-xs font-medium text-black/70 dark:text-white/70 shadow-sm dark:shadow-glass">
                 <span class="relative flex h-2 w-2">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-vortix-cyan opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-2 w-2 bg-vortix-cyan"></span>
@@ -204,19 +244,19 @@
                 <span class="text-gradient">Compromise nothing.</span>
             </h1>
 
-            <p class="hero-elem text-lg md:text-2xl text-white/40 max-w-2xl mx-auto mb-14 font-light leading-relaxed">
+            <p class="hero-elem text-lg md:text-2xl text-black/50 dark:text-white/40 max-w-2xl mx-auto mb-14 font-light leading-relaxed">
                 The most advanced media extraction engine ever built. Powered by yt-dlp, housed in a breathtaking interface.
             </p>
 
             <div class="hero-elem flex flex-col sm:flex-row items-center justify-center gap-6 w-full max-w-xl">
                 <div class="magnetic-wrap w-full sm:w-1/2">
-                    <a href="https://github.com/ibr3himkhaled/Vortix_Downloader/releases" target="_blank" class="btn-glow w-full flex items-center justify-center gap-3 px-8 py-4.5 bg-white text-black rounded-[2rem] font-semibold text-lg hover:scale-[1.02] transition-transform">
+                    <a href="https://github.com/ibr3himkhaled/Vortix_Downloader/releases" target="_blank" class="btn-glow w-full flex items-center justify-center gap-3 px-8 py-4.5 bg-black text-white dark:bg-white dark:text-black rounded-[2rem] font-semibold text-lg hover:scale-[1.02] transition-transform">
                         <i class="fa-brands fa-windows text-xl"></i>
                         Windows
                     </a>
                 </div>
                 <div class="magnetic-wrap w-full sm:w-1/2">
-                    <a href="https://apkpure.com/vortix/com.download.vortix" target="_blank" class="w-full flex items-center justify-center gap-3 px-8 py-4.5 glass-card rounded-[2rem] font-semibold text-lg text-white hover:bg-white/10 transition-colors">
+                    <a href="https://apkpure.com/vortix/com.download.vortix" target="_blank" class="w-full flex items-center justify-center gap-3 px-8 py-4.5 glass-card rounded-[2rem] font-semibold text-lg text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
                         <i class="fa-brands fa-android text-xl text-vortix-cyan"></i>
                         Android APK
                     </a>
@@ -225,7 +265,7 @@
         </div>
 
         <div class="mt-24 w-full max-w-5xl relative z-20 perspective-1000" id="app-mockup">
-            <div class="w-full aspect-[16/9] bg-[#030303]/90 backdrop-blur-3xl rounded-[2.5rem] border border-white/10 shadow-2xl overflow-hidden flex flex-col relative transform-gpu">
+            <div class="w-full aspect-[16/9] bg-[#030303]/95 backdrop-blur-3xl rounded-[2.5rem] border border-black/20 dark:border-white/10 shadow-2xl overflow-hidden flex flex-col relative transform-gpu">
                 
                 <div class="absolute inset-0 bg-gradient-to-br from-vortix-primary/10 to-vortix-cyan/5 pointer-events-none"></div>
 
@@ -276,51 +316,77 @@
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-24 feature-header">
                 <h2 class="font-display text-5xl md:text-6xl font-bold tracking-tight mb-6">Uncompromising Power.</h2>
-                <p class="text-xl text-white/40 max-w-2xl mx-auto font-light">Every tool you need to extract and organize media, packed into a beautiful, lightweight engine.</p>
+                <p class="text-xl text-black/50 dark:text-white/40 max-w-2xl mx-auto font-light">Every tool you need to extract and organize media, packed into a beautiful, lightweight engine.</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
                 <div class="glass-card rounded-[2.5rem] p-10 flex flex-col feature-card group">
-                    <div class="w-16 h-16 rounded-[1.5rem] bg-white/5 border border-white/10 flex items-center justify-center mb-8 text-white group-hover:scale-110 group-hover:bg-vortix-primary/20 group-hover:border-vortix-primary/30 transition-all duration-500">
+                    <div class="w-16 h-16 rounded-[1.5rem] bg-black/5 border border-black/10 dark:bg-white/5 dark:border-white/10 flex items-center justify-center mb-8 text-black dark:text-white group-hover:scale-110 group-hover:bg-vortix-primary/20 group-hover:border-vortix-primary/30 transition-all duration-500">
                         <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
                     </div>
                     <h3 class="text-2xl font-semibold mb-3">Auto-Organization</h3>
-                    <p class="text-white/40 text-sm leading-relaxed">Reads metadata to instantly create clean, structured folders for channels and playlists. Zero manual sorting.</p>
+                    <p class="text-black/60 dark:text-white/40 text-sm leading-relaxed">Reads metadata to instantly create clean, structured folders for channels and playlists. Zero manual sorting.</p>
                 </div>
 
                 <div class="glass-card rounded-[2.5rem] p-10 flex flex-col feature-card group">
-                    <div class="w-16 h-16 rounded-[1.5rem] bg-white/5 border border-white/10 flex items-center justify-center mb-8 text-white group-hover:scale-110 group-hover:bg-vortix-cyan/20 group-hover:border-vortix-cyan/30 transition-all duration-500">
+                    <div class="w-16 h-16 rounded-[1.5rem] bg-black/5 border border-black/10 dark:bg-white/5 dark:border-white/10 flex items-center justify-center mb-8 text-black dark:text-white group-hover:scale-110 group-hover:bg-vortix-cyan/20 group-hover:border-vortix-cyan/30 transition-all duration-500">
                         <i class="fa-solid fa-ban text-2xl"></i>
                     </div>
                     <h3 class="text-2xl font-semibold mb-3">SponsorBlock Native</h3>
-                    <p class="text-white/40 text-sm leading-relaxed">Built-in API integration detects and completely removes in-video sponsors, intros, and self-promotions.</p>
+                    <p class="text-black/60 dark:text-white/40 text-sm leading-relaxed">Built-in API integration detects and completely removes in-video sponsors, intros, and self-promotions.</p>
                 </div>
 
                 <div class="glass-card rounded-[2.5rem] p-10 flex flex-col feature-card group">
-                    <div class="w-16 h-16 rounded-[1.5rem] bg-white/5 border border-white/10 flex items-center justify-center mb-8 text-white group-hover:scale-110 group-hover:bg-white/10 transition-all duration-500">
+                    <div class="w-16 h-16 rounded-[1.5rem] bg-black/5 border border-black/10 dark:bg-white/5 dark:border-white/10 flex items-center justify-center mb-8 text-black dark:text-white group-hover:scale-110 group-hover:bg-black/10 dark:group-hover:bg-white/10 transition-all duration-500">
                         <i class="fa-solid fa-compact-disc text-2xl"></i>
                     </div>
                     <h3 class="text-2xl font-semibold mb-3">Lossless Audio</h3>
-                    <p class="text-white/40 text-sm leading-relaxed">Extract crystal clear MP3, FLAC, or WAV files. Automatically embeds the correct album art and metadata.</p>
+                    <p class="text-black/60 dark:text-white/40 text-sm leading-relaxed">Extract crystal clear MP3, FLAC, or WAV files. Automatically embeds the correct album art and metadata.</p>
                 </div>
+
+                <div class="glass-card rounded-[2.5rem] p-10 flex flex-col feature-card group">
+                    <div class="w-16 h-16 rounded-[1.5rem] bg-black/5 border border-black/10 dark:bg-white/5 dark:border-white/10 flex items-center justify-center mb-8 text-black dark:text-white group-hover:scale-110 group-hover:bg-vortix-primary/20 group-hover:border-vortix-primary/30 transition-all duration-500">
+                        <i class="fa-solid fa-display text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">8K & 60FPS Ready</h3>
+                    <p class="text-black/60 dark:text-white/40 text-sm leading-relaxed">Utilizes advanced FFmpeg merging to deliver flawless high-framerate 4K and 8K video files at maximum bandwidth speeds.</p>
+                </div>
+
+                <div class="glass-card rounded-[2.5rem] p-10 flex flex-col feature-card group">
+                    <div class="w-16 h-16 rounded-[1.5rem] bg-black/5 border border-black/10 dark:bg-white/5 dark:border-white/10 flex items-center justify-center mb-8 text-black dark:text-white group-hover:scale-110 group-hover:bg-vortix-cyan/20 group-hover:border-vortix-cyan/30 transition-all duration-500">
+                        <i class="fa-solid fa-sliders text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">Granular Control</h3>
+                    <p class="text-black/60 dark:text-white/40 text-sm leading-relaxed">Download specific indices from massive playlists, embed external subtitles, or trim exact timestamps before initiating.</p>
+                </div>
+
+                <div class="glass-card rounded-[2.5rem] p-10 flex flex-col feature-card group">
+                    <div class="w-16 h-16 rounded-[1.5rem] bg-black/5 border border-black/10 dark:bg-white/5 dark:border-white/10 flex items-center justify-center mb-8 text-black dark:text-white group-hover:scale-110 group-hover:bg-black/10 dark:group-hover:bg-white/10 transition-all duration-500">
+                        <i class="fa-solid fa-network-wired text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">Multi-Threaded Engine</h3>
+                    <p class="text-black/60 dark:text-white/40 text-sm leading-relaxed">Experience blazing fast download speeds with concurrent connections and segmented downloading technology.</p>
+                </div>
+
             </div>
         </div>
     </section>
 
-    <section id="download" class="py-32 px-6 relative z-10 mb-20">
+    <section id="download" class="pt-32 pb-20 px-6 relative z-10">
         <div class="max-w-6xl mx-auto glass-card rounded-[3rem] p-16 md:p-24 text-center relative overflow-hidden cta-section">
             <div class="absolute inset-0 bg-gradient-to-t from-vortix-primary/10 to-transparent opacity-50 pointer-events-none"></div>
             
             <h2 class="font-display text-5xl md:text-7xl font-bold mb-8 tracking-tight">Ready to upgrade?</h2>
-            <p class="text-xl text-white/50 mb-14 max-w-2xl mx-auto font-light">Free forever. Open-source forever. No tracking, just pure performance.</p>
+            <p class="text-xl text-black/60 dark:text-white/50 mb-14 max-w-2xl mx-auto font-light">Free forever. Open-source forever. No tracking, just pure performance.</p>
             
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
-                <a href="https://github.com/ibr3himkhaled/Vortix_Downloader/releases" target="_blank" class="btn-glow px-10 py-5 bg-white text-black font-semibold rounded-full flex items-center justify-center gap-4 text-lg w-full sm:w-auto hover:scale-105 transition-transform">
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-6 relative z-10">
+                <a href="https://github.com/ibr3himkhaled/Vortix_Downloader/releases" target="_blank" class="btn-glow px-10 py-5 bg-black text-white dark:bg-white dark:text-black font-semibold rounded-full flex items-center justify-center gap-4 text-lg w-full sm:w-auto hover:scale-105 transition-transform">
                     <i class="fa-brands fa-windows text-2xl"></i>
                     Download Windows
                 </a>
                 
-                <a href="https://apkpure.com/vortix/com.download.vortix" target="_blank" class="glass-card px-10 py-5 text-white font-semibold rounded-full flex items-center justify-center gap-4 text-lg w-full sm:w-auto hover:bg-white/10 transition-colors">
+                <a href="https://apkpure.com/vortix/com.download.vortix" target="_blank" class="glass-card px-10 py-5 text-black dark:text-white font-semibold rounded-full flex items-center justify-center gap-4 text-lg w-full sm:w-auto hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
                     <i class="fa-brands fa-android text-2xl text-vortix-cyan"></i>
                     Download Android
                 </a>
@@ -328,8 +394,33 @@
         </div>
     </section>
 
+    <footer class="py-12 border-t border-black/10 dark:border-white/10 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-vortix-primary flex items-center justify-center shadow-glow-purple">
+                    <i class="fa-solid fa-bolt text-[12px] text-white"></i>
+                </div>
+                <span class="font-display font-semibold text-lg text-black dark:text-white">Vortix Downloader</span>
+            </div>
+            
+            <p class="text-sm text-black/50 dark:text-white/40 font-medium">Developed by Ibrahim Khaled</p>
+
+            <div class="flex items-center gap-6 text-[1.35rem] text-black/40 dark:text-white/40 relative z-10">
+                <a href="https://github.com/ibr3himkhaled" target="_blank" class="hover-gh transition-all duration-300"><i class="fa-brands fa-github"></i></a>
+                <a href="https://www.facebook.com/ibr3himkhaled/" target="_blank" class="hover-fb transition-all duration-300"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://www.instagram.com/ibr3him__khaled/" target="_blank" class="hover-ig transition-all duration-300"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/ibrahim-khaled-62772635a/" target="_blank" class="hover-li transition-all duration-300"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="https://t.me/+201067056468" target="_blank" class="hover-tg transition-all duration-300"><i class="fa-brands fa-telegram"></i></a>
+            </div>
+        </div>
+    </footer>
+
     <script>
-        // Smooth Scrolling using Lenis (Standard for modern award-winning sites)
+        // GSAP Animations Registration
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Smooth Scrolling using Lenis (WITH SCROLLTRIGGER SYNC)
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -339,14 +430,64 @@
             mouseMultiplier: 1,
         });
 
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
+        // Sync Lenis with ScrollTrigger to prevent missing animations
+        lenis.on('scroll', ScrollTrigger.update);
 
-        // GSAP Animations
-        gsap.registerPlugin(ScrollTrigger);
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            if (htmlElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Make Anchor Links trigger Lenis Smooth Scroll
+        document.querySelectorAll('.nav-link').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    lenis.scrollTo(targetElement, { offset: -100 });
+                }
+            });
+        });
+
+        // Interactive Navbar on Scroll (Shrink & Blur)
+        const navbar = document.getElementById('navbar');
+        const navContainer = document.getElementById('nav-container');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('pt-2');
+                navbar.classList.remove('pt-6');
+                
+                navContainer.classList.add('py-2', 'bg-white/80', 'dark:bg-[#0a0a0a]/80', 'backdrop-blur-xl', 'border', 'border-black/5', 'dark:border-white/10');
+                navContainer.classList.remove('py-4');
+            } else {
+                navbar.classList.add('pt-6');
+                navbar.classList.remove('pt-2');
+                
+                navContainer.classList.add('py-4');
+                navContainer.classList.remove('py-2', 'bg-white/80', 'dark:bg-[#0a0a0a]/80', 'backdrop-blur-xl', 'border', 'border-black/5', 'dark:border-white/10');
+            }
+        });
 
         // Hero Text Split & Reveal
         const titleWords = document.querySelectorAll('#main-title span');
@@ -399,22 +540,31 @@
             opacity: 0.5
         });
 
-        // Feature Cards Staggered Reveal
-        gsap.from('.feature-header', {
-            scrollTrigger: { trigger: '#features', start: 'top 75%' },
-            y: 50, opacity: 0, duration: 1, ease: 'power3.out'
-        });
+        // FIXED: Feature Cards & Header Staggered Reveal using fromTo
+        gsap.fromTo('.feature-header', 
+            { y: 50, opacity: 0 },
+            {
+                scrollTrigger: { trigger: '#features', start: 'top 85%' },
+                y: 0, opacity: 1, duration: 1, ease: 'power3.out'
+            }
+        );
 
-        gsap.from('.feature-card', {
-            scrollTrigger: { trigger: '#features', start: 'top 65%' },
-            y: 50, opacity: 0, duration: 1, stagger: 0.15, ease: 'power3.out'
-        });
+        gsap.fromTo('.feature-card', 
+            { y: 50, opacity: 0 },
+            {
+                scrollTrigger: { trigger: '#features', start: 'top 80%' },
+                y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: 'power3.out'
+            }
+        );
 
         // CTA Reveal
-        gsap.from('.cta-section', {
-            scrollTrigger: { trigger: '.cta-section', start: 'top 80%' },
-            y: 50, opacity: 0, scale: 0.95, duration: 1.2, ease: 'power4.out'
-        });
+        gsap.fromTo('.cta-section', 
+            { y: 50, opacity: 0, scale: 0.95 },
+            {
+                scrollTrigger: { trigger: '.cta-section', start: 'top 85%' },
+                y: 0, opacity: 1, scale: 1, duration: 1.2, ease: 'power4.out'
+            }
+        );
 
         // Magnetic Button Logic
         const magneticElements = document.querySelectorAll('.magnetic-wrap');
@@ -440,19 +590,6 @@
                     ease: "elastic.out(1, 0.3)"
                 });
             });
-        });
-
-        // Navbar Hide/Show on Scroll
-        let lastScroll = 0;
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            if (currentScroll > lastScroll && currentScroll > 100) {
-                navbar.style.transform = 'translateY(-150%)';
-            } else {
-                navbar.style.transform = 'translateY(0)';
-            }
-            lastScroll = currentScroll;
         });
     </script>
 </body>
